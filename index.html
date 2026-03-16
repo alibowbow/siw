@@ -596,7 +596,7 @@
       });
     }
 
-    function loadTrack(n, shouldPlay = false) {
+    function loadTrack(n, shouldPlay = false, shouldScroll = false) {
       state.current = clampTrack(n);
       const newUrl = getTrackUrl(state.current);
       if (audio.src !== newUrl) {
@@ -611,7 +611,9 @@
           playPromise.catch(() => updateStatus("재생하려면 한 번 더 눌러줘"));
         }
       }
-      scrollCurrentIntoView();
+      if (shouldScroll) {
+        scrollCurrentIntoView();
+      }
     }
 
     function scrollCurrentIntoView() {
@@ -630,18 +632,6 @@
       }
     }
 
-    function nextTrack(autoPlay = true) {
-      if (state.current < MAX_TRACK) {
-        loadTrack(state.current + 1, autoPlay);
-      }
-    }
-
-    function prevTrack(autoPlay = true) {
-      if (state.current > 1) {
-        loadTrack(state.current - 1, autoPlay);
-      }
-    }
-
     async function copyCurrentLink() {
       try {
         await navigator.clipboard.writeText(getTrackUrl(state.current));
@@ -653,10 +643,14 @@
       }
     }
 
-    document.getElementById("prevBtn").addEventListener("click", () => prevTrack(true));
-    document.getElementById("nextBtn").addEventListener("click", () => nextTrack(true));
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (state.current > 1) loadTrack(state.current - 1, true, true);
+    });
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (state.current < MAX_TRACK) loadTrack(state.current + 1, true, true);
+    });
     document.getElementById("playPauseBtn").addEventListener("click", togglePlayPause);
-    document.getElementById("playFromStartBtn").addEventListener("click", () => loadTrack(1, true));
+    document.getElementById("playFromStartBtn").addEventListener("click", () => loadTrack(1, true, true));
     document.getElementById("jumpCurrentBtn").addEventListener("click", scrollCurrentIntoView);
     document.getElementById("copyCurrentBtn").addEventListener("click", copyCurrentLink);
     document.getElementById("openCurrentBtn").addEventListener("click", () => window.open(getTrackUrl(state.current), "_blank"));
@@ -702,7 +696,7 @@
 
     audio.addEventListener("ended", () => {
       if (state.continuous && state.current < MAX_TRACK) {
-        loadTrack(state.current + 1, true);
+        loadTrack(state.current + 1, true, false);
       } else if (state.current >= MAX_TRACK) {
         updateStatus("마지막 트랙 종료");
         updateButtons();
