@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -8,38 +8,30 @@
     :root {
       --bg: #0b1020;
       --bg2: #131a2b;
-      --panel: rgba(19, 26, 43, 0.78);
-      --panel-strong: rgba(27, 36, 56, 0.92);
-      --line: rgba(255, 255, 255, 0.08);
+      --panel: rgba(19, 26, 43, 0.82);
+      --line: rgba(255, 255, 255, 0.1);
       --text: #eef2ff;
       --muted: #9fb0d0;
       --accent: #8b5cf6;
-      --accent-2: #22c55e;
-      --accent-3: #38bdf8;
-      --danger: #ef4444;
+      --accent2: #22c55e;
       --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
       --radius-xl: 24px;
-      --radius-lg: 18px;
-      --radius-md: 14px;
+      --radius-lg: 16px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
-      color: var(--text);
+      min-height: 100vh;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
       background:
         radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), transparent 24%),
         radial-gradient(circle at top right, rgba(139, 92, 246, 0.18), transparent 28%),
         linear-gradient(180deg, #0a0f1c 0%, #10182b 100%);
-      min-height: 100vh;
     }
 
     .wrap {
@@ -48,27 +40,32 @@
       padding: 24px 16px 40px;
     }
 
-    .hero {
-      padding: 28px 22px;
+    .panel {
       border: 1px solid var(--line);
       border-radius: var(--radius-xl);
-      background: linear-gradient(180deg, rgba(22, 30, 48, 0.9), rgba(15, 22, 36, 0.88));
+      background: var(--panel);
       box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero {
+      padding: 28px 22px;
       margin-bottom: 18px;
+      background: linear-gradient(180deg, rgba(22, 30, 48, 0.9), rgba(15, 22, 36, 0.88));
     }
 
     .hero-top {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
       gap: 16px;
       flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
     .title {
       margin: 0;
       font-size: clamp(1.6rem, 3vw, 2.4rem);
-      line-height: 1.1;
+      line-height: 1.12;
       letter-spacing: -0.03em;
     }
 
@@ -88,28 +85,17 @@
     .badge {
       padding: 9px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
       color: #d9e3ff;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       white-space: nowrap;
     }
 
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
+    .player-panel,
+    .content-panel { padding: 18px; }
 
-    .player-panel {
-      position: sticky;
-      top: 12px;
-      z-index: 50;
-      padding: 18px;
-      margin-bottom: 18px;
-    }
+    .player-panel { margin-bottom: 18px; }
 
     .now-playing {
       display: grid;
@@ -135,8 +121,6 @@
 
     .track-url {
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
       margin-top: 6px;
       color: #b8c7ea;
       text-decoration: none;
@@ -145,14 +129,14 @@
     }
 
     .status-pill {
+      min-width: 108px;
+      text-align: center;
       padding: 10px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
       font-weight: 700;
       font-size: 0.92rem;
-      text-align: center;
-      min-width: 108px;
     }
 
     audio {
@@ -162,8 +146,7 @@
     }
 
     .controls-row,
-    .toolbar,
-    .meta-grid {
+    .toolbar {
       display: grid;
       gap: 10px;
     }
@@ -174,50 +157,42 @@
     }
 
     .toolbar {
-      grid-template-columns: 1.25fr 0.8fr 0.9fr 0.9fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       align-items: center;
     }
 
-    .meta-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin-top: 12px;
-    }
-
     .btn,
-    .input,
     .select,
     .range-wrap {
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text);
-      border-radius: 14px;
     }
 
     .btn {
+      min-height: 48px;
       padding: 13px 14px;
       font-weight: 700;
       cursor: pointer;
       transition: 0.18s ease;
-      min-height: 48px;
     }
 
     .btn:hover {
       transform: translateY(-1px);
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.08);
     }
 
-    .btn:active {
-      transform: translateY(0);
-    }
+    .btn:active { transform: translateY(0); }
 
     .btn.primary {
       background: linear-gradient(135deg, var(--accent), #6d28d9);
-      border-color: rgba(255,255,255,0.12);
+      border-color: rgba(255, 255, 255, 0.12);
     }
 
     .btn.green {
-      background: linear-gradient(135deg, #16a34a, var(--accent-2));
-      border-color: rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, #16a34a, var(--accent2));
+      border-color: rgba(255, 255, 255, 0.12);
     }
 
     .btn.active {
@@ -225,11 +200,8 @@
       background: linear-gradient(135deg, #0f172a, #1d4ed8);
     }
 
-    .btn.ghost {
-      background: rgba(255,255,255,0.03);
-    }
+    .btn.ghost { background: rgba(255, 255, 255, 0.03); }
 
-    .input,
     .select {
       width: 100%;
       min-height: 48px;
@@ -238,31 +210,20 @@
       outline: none;
     }
 
-    .input::placeholder {
-      color: #96a6ca;
-    }
-
     .range-wrap {
-      padding: 10px 12px;
+      min-height: 48px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      min-height: 48px;
+      padding: 10px 12px;
     }
-
-    .range-wrap label {
+.range-wrap label {
       color: var(--muted);
       font-size: 0.78rem;
       margin-bottom: 6px;
     }
 
-    input[type="range"] {
-      width: 100%;
-    }
-
-    .content-panel {
-      padding: 18px;
-    }
+    input[type="range"] { width: 100%; }
 
     .list-head {
       display: flex;
@@ -280,9 +241,9 @@
     }
 
     .list-sub {
+      margin-top: 4px;
       color: var(--muted);
       font-size: 0.92rem;
-      margin-top: 4px;
     }
 
     .track-grid {
@@ -294,21 +255,21 @@
     .track-btn {
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      border-radius: 16px;
-      padding: 14px 10px 12px;
       min-height: 84px;
+      padding: 14px 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
       color: var(--text);
-      cursor: pointer;
       text-align: left;
+      cursor: pointer;
       transition: 0.18s ease;
     }
 
     .track-btn:hover {
       transform: translateY(-2px);
       border-color: rgba(56, 189, 248, 0.32);
-      background: linear-gradient(180deg, rgba(56, 189, 248, 0.12), rgba(255,255,255,0.04));
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.12), rgba(255, 255, 255, 0.04));
     }
 
     .track-btn.active {
@@ -326,16 +287,16 @@
       font-weight: 800;
       padding: 4px 7px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.16);
+      background: rgba(255, 255, 255, 0.16);
       backdrop-filter: blur(6px);
     }
 
     .track-num {
       display: block;
+      margin-bottom: 4px;
       font-size: 1.15rem;
       font-weight: 900;
       letter-spacing: -0.03em;
-      margin-bottom: 4px;
     }
 
     .track-text {
@@ -344,72 +305,35 @@
       font-size: 0.84rem;
     }
 
-    .empty {
-      padding: 28px 16px;
-      text-align: center;
-      color: var(--muted);
-      border: 1px dashed rgba(255,255,255,0.14);
-      border-radius: 18px;
-      background: rgba(255,255,255,0.03);
-    }
-
     .footer-note {
-      color: var(--muted);
-      text-align: center;
       margin-top: 16px;
+      text-align: center;
+      color: var(--muted);
       font-size: 0.9rem;
       line-height: 1.6;
     }
 
     @media (max-width: 900px) {
-      .controls-row {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-      .toolbar {
-        grid-template-columns: 1fr 1fr;
-      }
-      .meta-grid {
-        grid-template-columns: 1fr;
-      }
+      .controls-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .toolbar { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 620px) {
-      .wrap {
-        padding: 14px 12px 28px;
-      }
-      .hero,
-      .player-panel,
-      .content-panel {
-        border-radius: 20px;
-      }
-      .hero {
-        padding: 22px 16px;
-      }
-      .player-panel {
-        top: 8px;
-        padding: 14px;
-      }
-      .now-playing {
-        grid-template-columns: 1fr;
-      }
-      .controls-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .toolbar {
-        grid-template-columns: 1fr;
-      }
-      .track-grid {
-        grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
-      }
-      .btn, .input, .select {
-        min-height: 46px;
-      }
+      .wrap { padding: 14px 12px 28px; }
+      .hero, .player-panel, .content-panel { border-radius: 20px; }
+      .hero { padding: 22px 16px; }
+      .player-panel, .content-panel { padding: 14px; }
+      .now-playing { grid-template-columns: 1fr; }
+      .controls-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toolbar { grid-template-columns: 1fr; }
+      .track-grid { grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); }
+      .btn, .select { min-height: 46px; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <section class="hero">
+    <section class="panel hero">
       <div class="hero-top">
         <div>
           <h1 class="title">시원스쿨 패턴 중국어 오디오 플레이어</h1>
@@ -439,16 +363,15 @@
       <audio id="audio" controls preload="none"></audio>
 
       <div class="controls-row">
-        <button id="prevBtn" class="btn ghost">⏮ 이전</button>
-        <button id="playPauseBtn" class="btn primary">▶ 재생</button>
-        <button id="nextBtn" class="btn ghost">다음 ⏭</button>
-        <button id="playFromStartBtn" class="btn green">처음부터 듣기</button>
-        <button id="jumpCurrentBtn" class="btn ghost">현재 위치 보기</button>
+        <button id="prevBtn" class="btn ghost" type="button">⏮ 이전</button>
+        <button id="playPauseBtn" class="btn primary" type="button">▶ 재생</button>
+        <button id="nextBtn" class="btn ghost" type="button">다음 ⏭</button>
+        <button id="playFromStartBtn" class="btn green" type="button">처음부터 듣기</button>
+        <button id="jumpCurrentBtn" class="btn ghost" type="button">현재 위치 보기</button>
       </div>
 
       <div class="toolbar">
-        <input id="searchInput" class="input" type="text" inputmode="numeric" placeholder="번호 검색 예: 12, 120" />
-        <button id="continuousBtn" class="btn active">연속 듣기 ON</button>
+        <button id="continuousBtn" class="btn active" type="button">연속 듣기 ON</button>
         <select id="speedSelect" class="select" aria-label="재생 속도">
           <option value="0.8">속도 0.8x</option>
           <option value="1" selected>속도 1.0x</option>
@@ -460,12 +383,6 @@
           <label for="volumeRange">볼륨</label>
           <input id="volumeRange" type="range" min="0" max="1" step="0.01" value="1" />
         </div>
-      </div>
-
-      <div class="meta-grid">
-        <button id="copyCurrentBtn" class="btn ghost">현재 링크 복사</button>
-        <button id="openCurrentBtn" class="btn ghost">현재 링크 새 탭</button>
-        <button id="resetBtn" class="btn ghost">검색 초기화</button>
       </div>
     </section>
 
@@ -489,237 +406,204 @@
   </div>
 
   <script>
-    const BASE_URL = "https://www-ndrm.siwonschool.com/qr/china/20160707/china_pattern_";
-    const MAX_TRACK = 263;
+    (() => {
+      "use strict";
 
-    const state = {
-      current: Number(localStorage.getItem("siwon.current") || 1),
-      continuous: JSON.parse(localStorage.getItem("siwon.continuous") ?? "true"),
-      speed: Number(localStorage.getItem("siwon.speed") || 1),
-      volume: Number(localStorage.getItem("siwon.volume") || 1),
-      query: ""
-    };
+      const BASE_URL = "https://www-ndrm.siwonschool.com/qr/china/20160707/china_pattern_";
+      const MAX_TRACK = 263;
 
-    const audio = document.getElementById("audio");
-    const trackTitle = document.getElementById("trackTitle");
-    const trackUrl = document.getElementById("trackUrl");
-    const statusPill = document.getElementById("statusPill");
-    const trackGrid = document.getElementById("trackGrid");
-    const listInfo = document.getElementById("listInfo");
-    const searchInput = document.getElementById("searchInput");
-    const continuousBtn = document.getElementById("continuousBtn");
-    const speedSelect = document.getElementById("speedSelect");
-    const volumeRange = document.getElementById("volumeRange");
-    const playPauseBtn = document.getElementById("playPauseBtn");
+      const state = {
+        current: Number(localStorage.getItem("siwon.current") || 1),
+        continuous: JSON.parse(localStorage.getItem("siwon.continuous") ?? "true"),
+        speed: Number(localStorage.getItem("siwon.speed") || 1),
+        volume: Number(localStorage.getItem("siwon.volume") || 1)
+      };
 
-    function clampTrack(n) {
-      return Math.min(MAX_TRACK, Math.max(1, Number(n) || 1));
-    }
+      const el = {
+        audio: document.getElementById("audio"),
+        trackTitle: document.getElementById("trackTitle"),
+        trackUrl: document.getElementById("trackUrl"),
+        statusPill: document.getElementById("statusPill"),
+        trackGrid: document.getElementById("trackGrid"),
+        listInfo: document.getElementById("listInfo"),
+        continuousBtn: document.getElementById("continuousBtn"),
+        speedSelect: document.getElementById("speedSelect"),
+        volumeRange: document.getElementById("volumeRange"),
+        playPauseBtn: document.getElementById("playPauseBtn"),
+        prevBtn: document.getElementById("prevBtn"),
+        nextBtn: document.getElementById("nextBtn"),
+        playFromStartBtn: document.getElementById("playFromStartBtn"),
+        jumpCurrentBtn: document.getElementById("jumpCurrentBtn")
+      };
 
-    function getTrackUrl(n) {
-      return `${BASE_URL}${n}.mp3`;
-    }
+      const clampTrack = (n) => Math.min(MAX_TRACK, Math.max(1, Number(n) || 1));
+const getTrackUrl = (n) => `${BASE_URL}${n}.mp3`;
+      const getTrackTitle = (n) => `Pattern ${n}`;
 
-    function getTrackTitle(n) {
-      return `Pattern ${n}`;
-    }
-
-    function saveState() {
-      localStorage.setItem("siwon.current", String(state.current));
-      localStorage.setItem("siwon.continuous", JSON.stringify(state.continuous));
-      localStorage.setItem("siwon.speed", String(state.speed));
-      localStorage.setItem("siwon.volume", String(state.volume));
-    }
-
-    function updateNowPlaying() {
-      trackTitle.textContent = getTrackTitle(state.current);
-      const url = getTrackUrl(state.current);
-      trackUrl.href = url;
-      trackUrl.textContent = url;
-      updateStatus(audio.paused ? "대기 중" : "재생 중");
-    }
-
-    function updateStatus(text) {
-      statusPill.textContent = text;
-    }
-
-    function updateButtons() {
-      continuousBtn.textContent = state.continuous ? "연속 듣기 ON" : "연속 듣기 OFF";
-      continuousBtn.classList.toggle("active", state.continuous);
-      playPauseBtn.textContent = audio.paused ? "▶ 재생" : "⏸ 일시정지";
-    }
-
-    function makeTrackButton(n) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "track-btn";
-      btn.dataset.track = String(n);
-      btn.innerHTML = `
-        <span class="track-num">${n}</span>
-        <span class="track-text">눌러서 재생</span>
-      `;
-      if (n === state.current) btn.classList.add("active");
-      btn.addEventListener("click", () => loadTrack(n, true));
-      return btn;
-    }
-
-    function renderTracks() {
-      const q = state.query.trim();
-      trackGrid.innerHTML = "";
-
-      const matched = [];
-      for (let i = 1; i <= MAX_TRACK; i++) {
-        if (!q || String(i).includes(q)) matched.push(i);
+      function saveState() {
+        localStorage.setItem("siwon.current", String(state.current));
+        localStorage.setItem("siwon.continuous", JSON.stringify(state.continuous));
+        localStorage.setItem("siwon.speed", String(state.speed));
+        localStorage.setItem("siwon.volume", String(state.volume));
       }
 
-      listInfo.textContent = q
-        ? `검색 결과 ${matched.length}개 · 번호에 ${q} 포함`
-        : `총 ${MAX_TRACK}개 표시 중`;
-
-      if (matched.length === 0) {
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.textContent = "검색 결과가 없어. 다른 번호를 입력해봐.";
-        trackGrid.appendChild(empty);
-        return;
+      function updateStatus(text) {
+        el.statusPill.textContent = text;
       }
 
-      const fragment = document.createDocumentFragment();
-      matched.forEach((n) => fragment.appendChild(makeTrackButton(n)));
-      trackGrid.appendChild(fragment);
-      highlightCurrent();
-    }
-
-    function highlightCurrent() {
-      document.querySelectorAll(".track-btn").forEach((btn) => {
-        btn.classList.toggle("active", Number(btn.dataset.track) === state.current);
-      });
-    }
-
-    function loadTrack(n, shouldPlay = false, shouldScroll = false) {
-      state.current = clampTrack(n);
-      const newUrl = getTrackUrl(state.current);
-      if (audio.src !== newUrl) {
-        audio.src = newUrl;
+      function updateButtons() {
+        el.continuousBtn.textContent = state.continuous ? "연속 듣기 ON" : "연속 듣기 OFF";
+        el.continuousBtn.classList.toggle("active", state.continuous);
+        el.playPauseBtn.textContent = el.audio.paused ? "▶ 재생" : "⏸ 일시정지";
       }
-      saveState();
-      updateNowPlaying();
-      highlightCurrent();
-      if (shouldPlay) {
-        const playPromise = audio.play();
-        if (playPromise && typeof playPromise.catch === "function") {
-          playPromise.catch(() => updateStatus("재생하려면 한 번 더 눌러줘"));
+
+      function updateNowPlaying() {
+        el.trackTitle.textContent = getTrackTitle(state.current);
+        const url = getTrackUrl(state.current);
+        el.trackUrl.href = url;
+        el.trackUrl.textContent = url;
+        updateStatus(el.audio.paused ? "대기 중" : "재생 중");
+      }
+
+      function highlightCurrent() {
+        const buttons = el.trackGrid.querySelectorAll(".track-btn");
+        buttons.forEach((btn) => {
+          btn.classList.toggle("active", Number(btn.dataset.track) === state.current);
+        });
+      }
+
+      function scrollCurrentIntoView() {
+        const active = el.trackGrid.querySelector(`.track-btn[data-track="${state.current}"]`);
+        if (active) active.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+      }
+
+      function loadTrack(n, shouldPlay = false) {
+        state.current = clampTrack(n);
+        const nextUrl = getTrackUrl(state.current);
+        if (el.audio.src !== nextUrl) {
+          el.audio.src = nextUrl;
+        }
+
+        saveState();
+        updateNowPlaying();
+        highlightCurrent();
+
+        if (shouldPlay) {
+          const playPromise = el.audio.play();
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch(() => updateStatus("재생하려면 한 번 더 눌러줘"));
+          }
         }
       }
-      if (shouldScroll) {
-        scrollCurrentIntoView();
+
+      function makeTrackButton(n) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "track-btn";
+        btn.dataset.track = String(n);
+        btn.innerHTML = `<span class="track-num">${n}</span><span class="track-text">눌러서 재생</span>`;
+        if (n === state.current) btn.classList.add("active");
+        btn.addEventListener("click", () => loadTrack(n, true));
+        return btn;
       }
-    }
 
-    function scrollCurrentIntoView() {
-      const active = document.querySelector(`.track-btn[data-track="${state.current}"]`);
-      if (active) {
-        active.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+      function renderTracks() {
+        el.trackGrid.innerHTML = "";
+        el.listInfo.textContent = `총 ${MAX_TRACK}개 표시 중`;
+        const fragment = document.createDocumentFragment();
+        for (let i = 1; i <= MAX_TRACK; i += 1) {
+          fragment.appendChild(makeTrackButton(i));
+        }
+        el.trackGrid.appendChild(fragment);
+        highlightCurrent();
       }
-    }
 
-    function togglePlayPause() {
-      if (!audio.src) loadTrack(state.current, false);
-      if (audio.paused) {
-        audio.play().catch(() => updateStatus("재생하려면 다시 눌러줘"));
-      } else {
-        audio.pause();
+      function togglePlayPause() {
+        if (!el.audio.src) loadTrack(state.current, false);
+        if (el.audio.paused) {
+          el.audio.play().catch(() => updateStatus("재생하려면 다시 눌러줘"));
+        } else {
+          el.audio.pause();
+        }
       }
-    }
 
-    async function copyCurrentLink() {
-      try {
-        await navigator.clipboard.writeText(getTrackUrl(state.current));
-        updateStatus("링크 복사 완료");
-        setTimeout(() => updateStatus(audio.paused ? "대기 중" : "재생 중"), 1200);
-      } catch {
-        updateStatus("복사 실패");
-        setTimeout(() => updateStatus(audio.paused ? "대기 중" : "재생 중"), 1200);
+      function bindEvents() {
+        el.prevBtn.addEventListener("click", () => {
+          if (state.current > 1) loadTrack(state.current - 1, true);
+        });
+
+        el.nextBtn.addEventListener("click", () => {
+          if (state.current < MAX_TRACK) loadTrack(state.current + 1, true);
+        });
+
+        el.playPauseBtn.addEventListener("click", togglePlayPause);
+        el.playFromStartBtn.addEventListener("click", () => loadTrack(1, true));
+        el.jumpCurrentBtn.addEventListener("click", scrollCurrentIntoView);
+
+        el.continuousBtn.addEventListener("click", () => {
+          state.continuous = !state.continuous;
+          saveState();
+          updateButtons();
+        });
+
+        el.speedSelect.addEventListener("change", (event) => {
+          state.speed = Number(event.target.value);
+          el.audio.playbackRate = state.speed;
+          saveState();
+        });
+
+        el.volumeRange.addEventListener("input", (event) => {
+          state.volume = Number(event.target.value);
+          el.audio.volume = state.volume;
+          saveState();
+        });
+
+        el.audio.addEventListener("play", () => {
+          updateStatus("재생 중");
+          updateButtons();
+        });
+
+        el.audio.addEventListener("pause", () => {
+          updateStatus("대기 중");
+          updateButtons();
+        });
+
+        el.audio.addEventListener("ended", () => {
+          if (state.continuous && state.current < MAX_TRACK) {
+            loadTrack(state.current + 1, true);
+          } else if (state.current >= MAX_TRACK) {
+            updateStatus("마지막 트랙 종료");
+            updateButtons();
+          } else {
+            updateStatus("재생 완료");
+            updateButtons();
+          }
+        });
+
+        el.audio.addEventListener("error", () => {
+          updateStatus("오디오 로드 오류");
+          updateButtons();
+        });
       }
-    }
 
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      if (state.current > 1) loadTrack(state.current - 1, true, true);
-    });
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      if (state.current < MAX_TRACK) loadTrack(state.current + 1, true, true);
-    });
-    document.getElementById("playPauseBtn").addEventListener("click", togglePlayPause);
-    document.getElementById("playFromStartBtn").addEventListener("click", () => loadTrack(1, true, true));
-    document.getElementById("jumpCurrentBtn").addEventListener("click", scrollCurrentIntoView);
-    document.getElementById("copyCurrentBtn").addEventListener("click", copyCurrentLink);
-    document.getElementById("openCurrentBtn").addEventListener("click", () => window.open(getTrackUrl(state.current), "_blank"));
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      searchInput.value = "";
-      state.query = "";
-      renderTracks();
-    });
+      function init() {
+        state.current = clampTrack(state.current);
+        state.speed = Number.isFinite(state.speed) ? state.speed : 1;
+        state.volume = Number.isFinite(state.volume) ? state.volume : 1;
 
-    continuousBtn.addEventListener("click", () => {
-      state.continuous = !state.continuous;
-      saveState();
-      updateButtons();
-    });
+        el.audio.playbackRate = state.speed;
+        el.audio.volume = Math.min(1, Math.max(0, state.volume));
+        el.speedSelect.value = String(state.speed);
+        el.volumeRange.value = String(el.audio.volume);
 
-    speedSelect.addEventListener("change", (e) => {
-      state.speed = Number(e.target.value);
-      audio.playbackRate = state.speed;
-      saveState();
-    });
-
-    volumeRange.addEventListener("input", (e) => {
-      state.volume = Number(e.target.value);
-      audio.volume = state.volume;
-      saveState();
-    });
-
-    searchInput.addEventListener("input", (e) => {
-      state.query = e.target.value.replace(/[^0-9]/g, "");
-      e.target.value = state.query;
-      renderTracks();
-    });
-
-    audio.addEventListener("play", () => {
-      updateStatus("재생 중");
-      updateButtons();
-    });
-
-    audio.addEventListener("pause", () => {
-      updateStatus("대기 중");
-      updateButtons();
-    });
-
-    audio.addEventListener("ended", () => {
-      if (state.continuous && state.current < MAX_TRACK) {
-        loadTrack(state.current + 1, true, false);
-      } else if (state.current >= MAX_TRACK) {
-        updateStatus("마지막 트랙 종료");
+        renderTracks();
+        loadTrack(state.current, false);
         updateButtons();
-      } else {
-        updateStatus("재생 완료");
-        updateButtons();
+        bindEvents();
       }
-    });
 
-    audio.addEventListener("error", () => {
-      updateStatus("오디오 로드 오류");
-      updateButtons();
-    });
-
-    state.current = clampTrack(state.current);
-    audio.volume = state.volume;
-    audio.playbackRate = state.speed;
-    speedSelect.value = String(state.speed);
-    volumeRange.value = String(state.volume);
-
-    renderTracks();
-    loadTrack(state.current, false);
-    updateButtons();
+      init();
+    })();
   </script>
 </body>
 </html>
