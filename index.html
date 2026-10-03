@@ -330,10 +330,20 @@
       display: flex;
       justify-content: space-between;
       gap: 8px;
+      white-space: nowrap;
     }
 
+    .art-top span:first-child,
+    .art-bottom span:first-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 네모가 작아져도 글자가 줄바꿈되지 않게 네모 크기에 맞춰 줄인다 */
     .art-top {
       font-size: 12px;
+      font-size: clamp(9px, 4.1cqw, 12px);
       font-weight: 700;
       letter-spacing: 0.18em;
       opacity: 0.88;
@@ -341,6 +351,7 @@
 
     .art-bottom {
       font-size: 13px;
+      font-size: clamp(9px, 4.5cqw, 13px);
       font-weight: 600;
       opacity: 0.88;
       font-variant-numeric: tabular-nums;
@@ -986,13 +997,24 @@
       transform: translate(-50%, 0);
     }
 
-    /* ---------- 데스크톱: 2단 ---------- */
-    @media (min-width: 960px) {
+    /* ---------- 화면 아래 탭바 (플레이어 / 패턴) ---------- */
+    .viewbar,
+    .bottom-fade { display: none; }
+
+    @keyframes view-in {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.985);
+      }
+    }
+
+    /* ---------- 넓은 화면(PC·태블릿 세로): 플레이어와 목록을 나란히 ---------- */
+    @media (min-width: 720px) and (min-height: 560px) {
       .app { padding: 24px 28px 48px; }
 
       .layout {
         display: grid;
-        grid-template-columns: 400px minmax(0, 1fr);
+        grid-template-columns: clamp(320px, 38vw, 400px) minmax(0, 1fr);
         gap: 20px;
         align-items: start;
       }
@@ -1014,25 +1036,121 @@
       .mini { display: none; }
     }
 
-    /* ---------- 모바일·태블릿: 컴팩트 플레이어 ----------
-       아트워크를 작게 왼쪽에 두고, 진행바와 컨트롤을 한 줄씩으로 줄여
-       스크롤 없이 패턴 버튼이 바로 보이게 한다. */
-    @media (max-width: 959px) {
-      .topbar { margin-bottom: 12px; }
-      .layout > * + * { margin-top: 12px; }
+    /* ---------- 폰: 플레이어 탭 / 패턴 탭 전환 ---------- */
+    @media (max-width: 719px), (max-height: 559px) {
+      .app { padding-bottom: calc(env(safe-area-inset-bottom) + 96px); }
+      body[data-view="list"] .app { padding-bottom: calc(env(safe-area-inset-bottom) + 172px); }
+
+      .layout > * + * { margin-top: 0; }
+
+      body[data-view="player"] .library,
+      body[data-view="list"] .now { display: none; }
+
+      .view-in { animation: view-in 0.45s var(--ease); }
+
+      .viewbar {
+        position: fixed;
+        bottom: calc(env(safe-area-inset-bottom) + 12px);
+        left: 50%;
+        z-index: 25;
+        display: flex;
+        gap: 4px;
+        padding: 5px;
+        border-radius: 999px;
+        background: linear-gradient(160deg, rgba(48, 48, 66, 0.62), rgba(18, 18, 28, 0.58));
+        transform: translateX(-50%);
+      }
+
+      .viewbar-indicator {
+        position: absolute;
+        top: 5px;
+        bottom: 5px;
+        left: 5px;
+        width: 96px;
+        border-radius: 999px;
+        background: linear-gradient(160deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.07));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 6px 16px -8px rgba(0, 0, 0, 0.6);
+        transition: transform 0.55s var(--spring);
+      }
+
+      body[data-view="list"] .viewbar-indicator { transform: translateX(100px); }
+
+      .view-tab {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        width: 96px;
+        padding: 7px 0 6px;
+        border: 0;
+        border-radius: 999px;
+        color: var(--text-3);
+        background: none;
+        font-size: 11px;
+        font-weight: 650;
+        cursor: pointer;
+        transition: color 0.3s, transform 0.45s var(--spring);
+      }
+
+      .view-tab:active { transform: scale(0.9); }
+
+      .view-tab svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .view-tab[aria-selected="true"] { color: oklch(0.92 0.09 var(--h)); }
+
+      /* 패턴 탭에서는 미니 플레이어가 탭바 바로 위에 뜬다 */
+      .mini { bottom: calc(env(safe-area-inset-bottom) + 82px); }
+
+      /* 아래 떠 있는 바 뒤로 목록이 비쳐도 글자가 잘 보이도록 */
+      .mini,
+      .viewbar {
+        background: linear-gradient(160deg, rgba(54, 54, 72, 0.78), rgba(16, 16, 26, 0.82));
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        backdrop-filter: blur(30px) saturate(180%);
+      }
+
+      .bottom-fade {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 15;
+        display: block;
+        height: calc(env(safe-area-inset-bottom) + 100px);
+        background: linear-gradient(180deg, rgba(7, 7, 13, 0), rgba(7, 7, 13, 0.82) 70%);
+        pointer-events: none;
+      }
+
+      body[data-view="list"] .bottom-fade { height: calc(env(safe-area-inset-bottom) + 176px); }
+
+      /* 플레이어 탭이 한 화면에 들어오도록 화면 높이에 맞춰 네모 크기 조절 */
+      .art {
+        width: min(100%, 340px, max(170px, 100vh - 492px));
+        width: min(100%, 340px, max(170px, 100dvh - 492px));
+      }
+    }
+
+    /* 가로로 눕힌 폰: 플레이어 탭 안에서 번호 네모와 컨트롤을 좌우로 */
+    @media (max-height: 559px) and (orientation: landscape) {
+      .topbar { display: none; }
 
       .now {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
         grid-template-areas:
           "art meta"
-          "seek seek"
-          "controls controls";
+          "art seek"
+          "art controls";
         align-items: center;
-        column-gap: 14px;
-        row-gap: 6px;
-        padding: 14px 14px 12px;
-        border-radius: 28px;
+        column-gap: 28px;
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 18px 24px;
       }
 
       .art-stage {
@@ -1040,212 +1158,19 @@
         padding: 0;
       }
 
-      .art-glow {
-        width: 100%;
-        filter: blur(22px);
-      }
-
-      .art {
-        align-items: center;
-        justify-content: center;
-        width: 84px;
-        padding: 0;
-        border-radius: 20px;
-        transform: scale(0.92);
-        box-shadow:
-          0 14px 28px -14px oklch(0.55 0.22 var(--h) / 0.9),
-          inset 0 1px 0 rgba(255, 255, 255, 0.4),
-          inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-      }
-
-      .art-top,
-      .art-bottom { display: none; }
-
-      .art-num {
-        font-size: 38px;
-        font-size: 45cqw;
-      }
+      .art { width: min(240px, max(160px, 100dvh - 150px)); }
 
       .meta-row {
         grid-area: meta;
         margin: 0;
       }
 
-      .track-title { font-size: 20px; }
-
-      .track-sub {
-        margin-top: 2px;
-        font-size: 13px;
-      }
-
-      .icon-btn {
-        width: 42px;
-        height: 42px;
-      }
-
-      .seek {
-        grid-area: seek;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 4px;
-      }
-
-      .seek .times { display: contents; }
-
-      .scrubber {
-        flex: 1;
-        min-width: 0;
-      }
-
-      #timeCur,
-      #timeRemain {
-        flex: none;
-        min-width: 36px;
-      }
-
-      #timeCur { order: -1; }
-      #timeRemain { text-align: right; }
+      .seek { grid-area: seek; }
 
       .controls {
         grid-area: controls;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-        gap: 0;
-        margin: 0;
+        margin-top: 0;
       }
-
-      .extras { display: contents; }
-
-      #speedBtn {
-        grid-column: 1;
-        grid-row: 1;
-        justify-self: start;
-      }
-
-      .transport {
-        grid-column: 2;
-        grid-row: 1;
-        gap: 10px;
-      }
-
-      #repeatBtn {
-        grid-column: 3;
-        grid-row: 1;
-        justify-self: end;
-      }
-
-      .t-btn {
-        width: 50px;
-        height: 50px;
-      }
-
-      .t-btn svg {
-        width: 28px;
-        height: 28px;
-      }
-
-      .t-btn.play {
-        width: 62px;
-        height: 62px;
-      }
-
-      .t-btn.play svg {
-        width: 28px;
-        height: 28px;
-      }
-
-      .chip {
-        height: 36px;
-        padding: 0 11px;
-      }
-
-      .chip-icon,
-      .chip-label { display: none; }
-
-      .library { padding: 16px 14px 18px; }
-      .lib-head { margin-bottom: 12px; }
-      .lib-head h2 { font-size: 19px; }
-      .tabs { margin-bottom: 14px; }
-    }
-
-    /* 태블릿 폭: 조금 더 여유 있게, 버튼 라벨도 표시 */
-    @media (min-width: 600px) and (max-width: 959px) {
-      .now {
-        column-gap: 18px;
-        padding: 18px 20px 16px;
-      }
-
-      .art {
-        width: 112px;
-        border-radius: 24px;
-      }
-
-      .track-title { font-size: 24px; }
-      .track-sub { font-size: 14px; }
-
-      .transport { gap: 18px; }
-
-      .t-btn {
-        width: 56px;
-        height: 56px;
-      }
-
-      .t-btn.play {
-        width: 70px;
-        height: 70px;
-      }
-
-      .chip { padding: 0 14px; }
-
-      .chip-icon,
-      .chip-label { display: inline; }
-
-      .grid { grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); }
-    }
-
-    /* 가로로 눕힌 폰: 플레이어와 목록을 좌우로 */
-    @media (max-width: 959px) and (max-height: 520px) and (orientation: landscape) {
-      .layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-        gap: 12px;
-        align-items: start;
-      }
-
-      .layout > * + * { margin-top: 0; }
-
-      .now {
-        position: sticky;
-        top: 12px;
-      }
-
-      .chip { padding: 0 11px; }
-
-      .chip-icon,
-      .chip-label { display: none; }
-
-      .mini { display: none; }
-    }
-
-    @media (max-width: 360px) {
-      .now { column-gap: 12px; }
-      .art { width: 76px; }
-      .track-title { font-size: 18px; }
-      .transport { gap: 6px; }
-
-      .t-btn {
-        width: 46px;
-        height: 46px;
-      }
-
-      .t-btn.play {
-        width: 58px;
-        height: 58px;
-      }
-
-      .chip { padding: 0 9px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1274,6 +1199,8 @@
     <symbol id="i-speed" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></g></symbol>
     <symbol id="i-repeat-all" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></g></symbol>
     <symbol id="i-repeat-one" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/><path d="M11 10h1v4"/></g></symbol>
+    <symbol id="i-player" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></g></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></g></symbol>
     <symbol id="i-repeat-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 12H3"/><path d="m11 18 6-6-6-6"/><path d="M21 5v14"/></g></symbol>
   </svg>
 
@@ -1348,7 +1275,7 @@
         </div>
       </section>
 
-      <section class="library glass" aria-label="패턴 목록">
+      <section id="library" class="library glass" aria-label="패턴 목록">
         <div class="lib-head">
           <div>
             <h2>패턴 목록</h2>
@@ -1365,6 +1292,17 @@
       </section>
     </main>
   </div>
+
+  <div class="bottom-fade" aria-hidden="true"></div>
+  <nav id="viewbar" class="viewbar glass" role="tablist" aria-label="화면 전환">
+    <span class="viewbar-indicator" aria-hidden="true"></span>
+    <button class="view-tab" type="button" role="tab" data-view="player" aria-selected="true">
+      <svg><use href="#i-player" /></svg><span>플레이어</span>
+    </button>
+    <button class="view-tab" type="button" role="tab" data-view="list" aria-selected="false">
+      <svg><use href="#i-grid" /></svg><span>패턴</span>
+    </button>
+  </nav>
 
   <div id="mini" class="mini glass" aria-hidden="true">
     <div id="miniArt" class="mini-art" aria-hidden="true">1</div>
@@ -1457,6 +1395,8 @@
         plays: loadPlays(),
         favs: new Set(Array.isArray(savedFavs) ? savedFavs.map(Number).filter(isTrack) : []),
         tab: 0,
+        view: store.get("siwon.view", "player") === "list" ? "list" : "player",
+        listScroll: 0,
         hue: 280,
         dragging: false,
         dragTime: 0,
@@ -1467,6 +1407,9 @@
       const $ = (id) => document.getElementById(id);
       const el = {
         audio: $("audio"),
+        nowCard: $("nowCard"),
+        library: $("library"),
+        viewbar: $("viewbar"),
         art: $("art"),
         artNum: $("artNum"),
         artRange: $("artRange"),
@@ -1478,7 +1421,6 @@
         scrubFill: $("scrubFill"),
         timeCur: $("timeCur"),
         timeRemain: $("timeRemain"),
-        transport: $("transport"),
         prevBtn: $("prevBtn"),
         playBtn: $("playBtn"),
         nextBtn: $("nextBtn"),
@@ -1771,6 +1713,39 @@
         renderGrid();
       }
 
+      /* ---------- 화면 전환 (폰: 플레이어 탭 / 패턴 탭) ---------- */
+      const tabModeMQ = window.matchMedia("(max-width: 719px), (max-height: 559px)");
+
+      function updateMini() {
+        const show = tabModeMQ.matches && state.view === "list";
+        el.mini.classList.toggle("show", show);
+        el.mini.setAttribute("aria-hidden", String(!show));
+        el.mini.inert = !show;
+      }
+
+      function setView(view, animate = true) {
+        const prevView = document.body.dataset.view;
+        if (prevView === "list" && tabModeMQ.matches) state.listScroll = window.scrollY;
+
+        state.view = view === "list" ? "list" : "player";
+        document.body.dataset.view = state.view;
+        store.set("siwon.view", state.view);
+        el.viewbar.querySelectorAll(".view-tab").forEach((tab) => {
+          tab.setAttribute("aria-selected", String(tab.dataset.view === state.view));
+        });
+        updateMini();
+
+        if (!tabModeMQ.matches || prevView === state.view) return;
+        const section = state.view === "player" ? el.nowCard : el.library;
+        if (animate) {
+          section.classList.remove("view-in");
+          void section.offsetWidth;
+          section.classList.add("view-in");
+        }
+        window.scrollTo(0, state.view === "list" ? state.listScroll : 0);
+        if (state.view === "list") moveIndicator(false);
+      }
+
       /* ---------- 재생 ---------- */
       function play() {
         if (!el.audio.src) loadTrack(state.current);
@@ -1972,7 +1947,14 @@
         el.nextBtn.addEventListener("click", () => { haptic(); next(); });
         el.miniNext.addEventListener("click", () => { haptic(); next(); });
         el.favBtn.addEventListener("click", () => { haptic(); toggleFav(); });
-        el.miniInfo.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+        el.miniInfo.addEventListener("click", () => { haptic(); setView("player"); });
+
+        el.viewbar.addEventListener("click", (e) => {
+          const tab = e.target.closest(".view-tab");
+          if (!tab) return;
+          haptic();
+          setView(tab.dataset.view);
+        });
 
         el.speedBtn.addEventListener("click", () => {
           haptic();
@@ -2156,17 +2138,12 @@
         window.addEventListener("resize", () => moveIndicator(false));
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => moveIndicator(false));
 
-        // 큰 플레이어가 화면 밖으로 나가면 미니 플레이어 등장
-        if ("IntersectionObserver" in window) {
-          const io = new IntersectionObserver(([entry]) => {
-            const show = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-            el.mini.classList.toggle("show", show);
-            el.mini.setAttribute("aria-hidden", String(!show));
-            el.mini.inert = !show;
-          });
-          io.observe(el.transport);
-        }
-        el.mini.inert = true;
+        const onModeChange = () => {
+          updateMini();
+          moveIndicator(false);
+        };
+        if (tabModeMQ.addEventListener) tabModeMQ.addEventListener("change", onModeChange);
+        else if (tabModeMQ.addListener) tabModeMQ.addListener(onModeChange);
       }
 
       /* ---------- 시작 ---------- */
@@ -2184,6 +2161,7 @@
         renderSummary();
         paintTabs();
         renderGrid();
+        setView(state.view, false);
         moveIndicator(false);
         bindMediaSession();
         bindEvents();
